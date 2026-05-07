@@ -1,0 +1,38 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% MATHS COMMANDS
+% Vectors and tensors notation
+\newcommand{\dec}[1]{\bm{#1}} % tensor decorator, use \bm{} for bold math, 
+% or \bar{}, \widebar{} or \underline{} for decorators, as you please
+\newcommand{\tone}[1]{\dec{#1}} % rank one tensor (vector)
+\newcommand{\ttwo}[1]{\dec{\dec{#1}}} % rank two tensor
+\newcommand{\tthree}[1]{\dec{\dec{\dec{#1}}}} % rank three tensor
+\newcommand{\tfour}[1]{\dec{\dec{\dec{\dec{#1}}}}} % rank four tensor
+% Braces
+\newcommand{\lbr}{\left\lbrace}
+\newcommand{\rbr}{\right\rbrace}
+% Differentiation
+% note: built-in \div gives ÷ 
+\newcommand{\deriv}{\,\mathrm{d}}
+\newcommand{\diff}[2]{\frac{\mathrm{d}#1}{\mathrm{d}#2}}
+\newcommand{\pdiff}[2]{\frac{\partial #1}{\partial #2}}
+% Operators
+\def\diag{\operatorname{Diag}}
+\def\Div{\operatorname{div}}
+\def\DIV{\operatorname{DIV}}
+\def\grad{\operatorname{grad}}
+\def\GRAD{\operatorname{GRAD}}
+\def\tr{\operatorname{tr}}
+\def\dev{\operatorname{dev}}
+\def\vol{\operatorname{vol}}
+\newcommand{\doublepts}{\mathrel{\bm{:}}} % double tensor contraction
+\newcommand{\crpd}{\times} % cross product
+% often used variables
+\newcommand{\shp}{\varphi} % shape functions
+\newcommand{\dShp}{\tone{\nabla}_{\!\!0} \shp}
+\newcommand{\gradX}{\ttwo{\nabla}_{\!\!0}}
+\newcommand{\gradx}{\ttwo{\nabla}}
+\newcommand{\eps}{\ttwo{\varepsilon}}
+\newcommand{\sig}{\ttwo{\sigma}}
+% invariants
+\newcommand{\invI}[1]{I_{#1}}
+\newcommand{\invII}[1]{I\!I_{#1}}
+\newcommand{\invIII}[1]{I\!I\!I_{#1}}

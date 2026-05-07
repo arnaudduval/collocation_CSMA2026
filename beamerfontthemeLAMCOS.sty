@@ -1,0 +1,43 @@
+
+% Protects fonts from Beamer screwing with them
+% http://tex.stackexchange.com/questions/10488/force-computer-modern-in-math-mode
+\usefonttheme{professionalfonts}
+
+% \usepackage{sansmath}
+\usefonttheme[onlymath]{serif} % keep Latin Modern Roman for maths
+
+% \usepackage{uarial} % use Arial font
+\usepackage{fontspec}
+\setmainfont{Arial}
+\renewcommand\familydefault{\sfdefault}
+% \usepackage[cyr]{aeguill} % nicer \tiny look of default beamer font
+
+
+\mode<presentation>
+
+%\setbeamerfont{alerted text}{series=\bfseries}
+%\setbeamerfont{item projected}{series=\bfseries}
+%
+\setbeamerfont{section in head/foot}{size=\tiny}
+\setbeamerfont{subsection in head/foot}{size=\tiny}
+\setbeamerfont{page number in head/foot}{size=\tiny}
+%
+\setbeamerfont{title}{series=\bfseries,size=\LARGE} %
+\setbeamerfont{subtitle}{parent={normal text},shape=\itshape}
+% \setbeamerfont{author}{parent={normal text},series=\bfseries}
+\setbeamerfont{author}{parent={normal text},size=\footnotesize}
+\setbeamerfont{institute}{parent={normal text},series=\tiny}
+\setbeamerfont{date}{parent={normal text},series=\normalfont,size=\tiny}
+
+%\setbeamerfont{section in toc}{series=\bfseries}
+\setbeamerfont{section in section page}{series=\bfseries,size=\Large}
+\setbeamerfont{section number in section page}{series=\bfseries,size=\Huge}
+\setbeamerfont{frametitle}{series=\bfseries}
+\setbeamerfont{framesubtitle}{series=\normalfont,size=\small}
+%
+
+\setbeamerfont{footnote}{size=\tiny}
+
+
+\mode
+<all>

@@ -1,0 +1,303 @@
+\mode<presentation>
+
+%-----------------------------------------------------------------------------
+% MARGINS
+
+\setbeamersize{text margin left=0.5cm,text margin right=0.5cm}
+%-----------------------------------------------------------------------------
+
+
+%-----------------------------------------------------------------------------
+% ITEMS
+
+% use square as item markers in itemize/enumerate
+\setbeamertemplate{items}[square]
+% left aligned labels in description
+\defbeamertemplate*{description item}{mytheme}{\insertdescriptionitem\hfill}
+
+% \setbeamertemplate{enumerate item}[circle]
+% \setbeamertemplate{enumerate subitem}[square]
+% \defbeamertemplate*{itemize item}{mytheme}{%
+% \usebeamerfont*{itemize item}\donotcoloroutermaths${\blacktriangleright}$
+% }
+% \defbeamertemplate*{itemize subitem}{mytheme}{%
+% \usebeamerfont*{itemize subitem}\donotcoloroutermaths${\bullet}$
+% }
+% \defbeamertemplate*{itemize subsubitem}{mytheme}{%
+% \usebeamerfont*{itemize subsubitem}\donotcoloroutermaths${-}$
+% }
+% \setbeamertemplate{items}[mytheme]
+
+% make item markers colored accordingly in alerted blocks
+% beamer updates `local structure' color to `alerted text' and `example text'
+% in both blocks, which could be slightly different than block title background 
+% (in this case, block title background colors are darker)
+% \addtobeamertemplate{block alerted begin}{%
+% 	\setbeamercolor*{item projected}{parent={item projected alerted}}%
+% 	\setbeamercolor*{subitem projected}{parent={item projected alerted}}%
+% 	\setbeamercolor*{item}{parent={item alerted}}%
+% 	\setbeamercolor*{subitem}{parent={item alerted}}%
+% }{}
+%-----------------------------------------------------------------------------
+
+%-----------------------------------------------------------------------------
+% FOOTNOTE
+\setlength\footnotesep{0pt} % interline skip between footnotes
+\setbeamertemplate{footnote}{%
+  \tiny%
+  \parindent 1em\noindent%
+  \raggedright
+  \hbox to 1em{\hfil\insertfootnotemark}\insertfootnotetext\par%
+}
+
+%-----------------------------------------------------------------------------
+
+%-----------------------------------------------------------------------------
+% SECTION / SUBSECTION PAGE AND TOC
+
+\setbeamertemplate{sections/subsections in toc}[square]
+% \setbeamertemplate{section in toc}[circle]
+% % \setbeamertemplate{subsection in toc}[circle] % does not work -> keeping definition below
+% % \setbeamertemplate{subsubsection in toc}[circle]
+%
+% % \setbeamertemplate{section in toc}{%
+% %     *  \inserttocsection \par}
+% \setbeamertemplate{subsection in toc}{
+%     \usebeamercolor[fg]{subsection in toc}%
+%     \flushleft \hspace{2ex} \donotcoloroutermaths${\blacktriangleright}$ \inserttocsubsection \par\vskip-1ex}
+%
+
+\newlength\fillw
+\fillw=0.3\textwidth
+\advance \fillw by 2\beamer@leftmargin
+
+\defbeamertemplate*{section page}{lamcos-split}{
+	% \frame[plain]{
+	\usebeamercolor{section in section page}
+	\tikz[remember picture, overlay]{%
+	\fill[color=bg](current page.north west) rectangle ([xshift=\fillw]current page.south west);
+	}
+	\begin{columns}[c,onlytextwidth]
+		\column{0.3\textwidth}
+		\centering
+		\vbox to\LH{%
+			\vfill%
+			\pgfuseimage{lamcos-white}\vfill%
+			}
+		\vskip\baselineskip
+		\usebeamerfont{section number in section page}\textcolor{fg}{\the\beamer@tocsectionnumber}\par%  \thesection gives wrong number with starred sections
+		\ifx\insertsectiongraphic\empty%
+			\vskip\baselineskip
+			\usebeamerfont{section in section page}\textcolor{fg}{\MakeUppercase{\insertsection}}\par%
+		\else%
+			\vskip\baselineskip
+			\insertsectiongraphic
+		\column{0.5\textwidth}
+			\tableofcontents[currentsection,hideothersubsections]
+	\end{columns}
+  	\tikzheadline
+	% }
+}
+\newif\ifbeamer@theme@sectionpage
+\DeclareOptionBeamer{sectionpage}[true]{\csname beamer@theme@sectionpage#1\endcsname}
+
+\AtBeginSection[]{
+	\ifbeamer@theme@sectionpage
+		\frame[plain]{\sectionpage}
+	\fi
+}
+%-----------------------------------------------------------------------------
+
+
+
+%-----------------------------------------------------------------------------
+% TITLEPAGE
+
+% \setbeamertemplate{title page}[default]
+
+% \newlength\authorw 
+% \settowidth{\authorw}{\insertauthor{}} % not working as expected
+\newlength\authorinstitutew
+\defbeamertemplate{title page}{lamcos-center}{%
+	\setlength{\authorinstitutew}{\dimexpr0.45\paperwidth-0.5\beamer@rightmargin+2\SQRL}
+	% \leavevmode%
+	\vbox to \textheight{
+	\vskip5ex % 2 x 2.5ex, height of headline
+	\vbox to\LH{%
+		\vfill\hskip\beamer@leftmargin\insertlogo\vfill%
+		}
+	\vskip12pt plus 1filll
+	\hbox to \paperwidth{%
+		\hfill%
+		\begin{beamercolorbox}[wd=0.8\paperwidth,sep=6pt,left]{title} %ht=5ex,
+			\newlength{\rulewidth}
+			\setlength{\rulewidth}{\dimexpr\linewidth-12pt\relax}
+			\vskip-12pt
+			\textcolor{fg}{\rule{\rulewidth}{0.5pt}}\par%
+			\usebeamerfont{title}\inserttitle\strut\par%
+			\vskip-.5\baselineskip
+			\textcolor{fg}{\rule{\rulewidth}{0.5pt}}
+		\end{beamercolorbox}%
+		\hfill
+		}%
+	\ifx\insertsubtitle\empty%
+	\else%
+		\hbox to \paperwidth{%
+			\hfill%
+			\begin{beamercolorbox}[wd=0.8\paperwidth,sep=6pt,left]{subtitle} %,ht=4ex
+				\usebeamerfont{subtitle}\insertsubtitle%
+			\end{beamercolorbox}%
+			\hfill}%
+	\fi
+	\vskip12pt plus 1filll
+	\hbox to \paperwidth{%
+		\hfill%
+		\begin{beamercolorbox}[wd=\authorinstitutew,sep=0.25ex,left]{author} %ht=5ex,
+			\usebeamerfont{author}\insertauthor\strut
+		\end{beamercolorbox}%
+		\hspace{\dimexpr0.5\beamer@rightmargin+2\SQRL}
+		}%
+	\ifx\insertinstitute\empty%
+	\else{%
+		\vskip1.125ex\par%
+		\hbox to \paperwidth{%
+			\hfill%
+			\begin{beamercolorbox}[wd=\authorinstitutew,sep=1pt,left,ignorebg]{institute} %ht=5ex,
+				\usebeamerfont{institute}\insertinstitute\strut
+			\end{beamercolorbox}%
+			\hspace{\dimexpr0.5\beamer@rightmargin+2\SQRL}
+			}%
+		}%
+	\fi
+	\vskip\SQRL
+	}
+}
+
+\newlength\shadew
+\shadew=0.3\paperwidth
+\advance \shadew by 2\beamer@leftmargin
+
+% 
+% define 3 color custom shading
+% from https://tex.stackexchange.com/a/191742
+%
+\tikzset{vertical custom shading/.code={%
+ \pgfmathsetmacro\tikz@vcs@middle{#1}
+ \pgfmathsetmacro\tikz@vcs@bottom{\tikz@vcs@middle/2}
+ \pgfmathsetmacro\tikz@vcs@top{(100-\tikz@vcs@middle)/2+\tikz@vcs@middle}
+\pgfdeclareverticalshading[tikz@axis@top,tikz@axis@middle,tikz@axis@bottom]{newaxis}{100bp}{%
+  color(0bp)=(tikz@axis@bottom);
+  color(\tikz@vcs@bottom bp)=(tikz@axis@bottom);
+  color(\tikz@vcs@middle bp)=(tikz@axis@middle);
+  color(\tikz@vcs@top bp)=(tikz@axis@top);
+  color(100bp)=(tikz@axis@top)}
+  \pgfkeysalso{/tikz/shading=newaxis}
+  }
+}
+
+\defbeamertemplate{title page}{lamcos-split}{
+	% \vskip3\HGH%
+	\tikz[remember picture, overlay]{%
+	\shade[top color=shadetop!10, bottom color=shadebottom!20, middle color=white, vertical custom shading=60](current page.north west) rectangle ([xshift=\shadew]current page.south west);
+	}
+	\begin{columns}[c,onlytextwidth]
+		\column{0.3\textwidth}
+		\setlength{\authorinstitutew}{\dimexpr\linewidth-\beamer@rightmargin}
+		\vskip0.75\baselineskip
+		\vbox to\LH{%
+			\vfill\hskip\beamer@leftmargin\insertlogo\vfill%
+			}
+		% \vskip0pt plus1filll % not working
+		\vskip3\baselineskip
+		\hbox to \linewidth{%
+			% \hfill%
+			\hskip\beamer@leftmargin 
+			\begin{beamercolorbox}[wd=\authorinstitutew,sep=0.25ex,left]{author} %ht=5ex,
+				\usebeamerfont{author}\insertauthor\strut
+			\end{beamercolorbox}%
+			\hspace{\dimexpr0.5\beamer@rightmargin+2\SQRL}
+			}%
+		\ifx\insertinstitute\empty%
+		\else{%
+			\vskip1.125ex\par%
+			\hbox to \linewidth{%
+				% \hfill%
+				\hskip\beamer@leftmargin 
+				\begin{beamercolorbox}[wd=\authorinstitutew,sep=1pt,left,ignorebg]{institute} %ht=5ex,
+					\usebeamerfont{institute}\insertinstitute\strut
+				\end{beamercolorbox}%
+				\hspace{\dimexpr0.5\beamer@rightmargin+2\SQRL}
+				}%
+			}%
+		\fi
+		\column{0.65\textwidth}
+		\hbox to \linewidth{%
+			\hfill%
+			\begin{beamercolorbox}[wd=0.8\linewidth,sep=6pt,left]{title} %ht=5ex,
+				\newlength{\rulewidth}
+				\setlength{\rulewidth}{\dimexpr\linewidth-12pt\relax}
+				\vskip-12pt
+				\textcolor{fg}{\rule{\rulewidth}{0.5pt}}\par%
+				\usebeamerfont{title}\inserttitle\strut\par%
+				\vskip-.5\baselineskip
+				\textcolor{fg}{\rule{\rulewidth}{0.5pt}}
+			\end{beamercolorbox}%
+			\hfill
+			}%
+		% \vskip0pt plus1filll % not working
+		\ifx\insertsubtitle\empty%
+		\else%
+			\vskip0pt % weird but necessary with "c" option in columns env. otherwise subtitle does not show...
+			\hbox to \linewidth{%
+				\hfill%
+				\begin{beamercolorbox}[wd=0.8\linewidth,sep=6pt,left]{subtitle} %,ht=4ex
+					\usebeamerfont{subtitle}\insertsubtitle%
+				\end{beamercolorbox}%
+				\hfill}%
+		\fi 
+	\end{columns}
+	% \vskip.5\baselineskip
+}
+
+\def\beamer@theme@titlepage@default{%
+  \setbeamertemplate{title page}[default]
+}
+\def\beamer@theme@titlepage@center{%
+  \setbeamertemplate{title page}[lamcos-center]
+}
+\def\beamer@theme@titlepage@split{%
+  \setbeamertemplate{title page}[lamcos-split]
+}
+\DeclareOptionBeamer{titlepage}{\csname beamer@theme@titlepage@#1\endcsname}
+
+%-----------------------------------------------------------------------------
+
+
+\ProcessOptionsBeamer
+\mode
+<all>
+
+%
+% The \sectiongraphic command inspired from \titlegraphic
+%
+%
+\newcommand\sectiongraphic[1]{\def\insertsectiongraphic{%
+	% #1	
+	% \includegraphics[width=\linewidth,cfbox=white 1pt 1pt]{#1} % cframe= color rulewidth sep margin
+	\ifx\relax#1\relax
+		% parameter #1 is empty (no section graphic)
+	\else
+		\usebeamercolor{section in section page}
+		\begin{tcolorbox}[skin=enhanced,
+			left=0mm,right=0mm,top=0mm,bottom=0mm,boxsep=0pt, % the box fits the same of the graphic
+			arc=0mm,% the box is rectangular
+			frame hidden, interior hidden, % no frame nor bg color
+			fuzzy halo=1pt with bg!95, % halo around the graphic
+			outer arc=0.5mm, % the halo is a bit rounded
+			]
+			\includegraphics[width=\linewidth]{#1} % graphic
+		\end{tcolorbox}
+	\fi
+	}
+}
+\sectiongraphic{}

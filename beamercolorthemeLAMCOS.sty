@@ -1,0 +1,113 @@
+% Beamer color definitions
+
+\PassOptionsToPackage{table,svgnames}{xcolor} % xcolor is already loaded by beamer
+
+%-------------------------------------------------------------------------------
+% LAMCOS color palette
+\definecolor{LAMCOSdblue}{RGB}{43,32,113}
+\definecolor{LAMCOSlblue}{RGB}{5,99,193}
+\definecolor{LAMCOSred}{RGB}{229,40,24}
+\definecolor{LAMCOSyellow}{RGB}{249,178,51}
+\definecolor{LAMCOSorange}{RGB}{243,146,0}
+\definecolor{LAMCOSgreen}{RGB}{0,169,122}
+%-------------------------------------------------------------------------------
+
+%-------------------------------------------------------------------------------
+% BEAMER color palette
+\setbeamercolor{normal text}{fg=black,bg=white}
+\setbeamercolor{alerted text}{fg=LAMCOSred}
+\setbeamercolor{example text}{fg=LAMCOSorange}
+
+\setbeamercolor{structure}{fg=LAMCOSdblue}
+
+\colorlet{captioncol}{LAMCOSlblue} % color for captions (Figures and Tables)
+\colorlet{urlcol}{LAMCOSlblue} % color for url links
+
+\newcommand<>{\exampled}[1]{%
+{\usebeamercolor{example text}\color#2{fg}{#1}}
+}
+
+\setbeamercolor{palette primary}{use=structure,fg=structure.fg,bg=structure.fg!8} % 92% transparent background
+\setbeamercolor{palette secondary}{use=structure,fg=structure.fg!75!LAMCOSlblue}
+\setbeamercolor{palette tertiary}{use=structure,fg=structure.fg!50!LAMCOSlblue}
+\setbeamercolor{palette quaternary}{use=structure,fg=structure.fg!25!LAMCOSlblue}
+%-------------------------------------------------------------------------------
+
+%-------------------------------------------------------------------------------
+% BLOCKS
+\setbeamercolor{block title}{use=structure,fg=white,bg=structure.fg!90!black}
+\setbeamercolor{block title alerted}{use=alerted text,fg=white,bg=alerted text.fg!90!black}
+\setbeamercolor{block title example}{use=example text,fg=white,bg=example text.fg!90!black}
+
+\setbeamercolor{block body}{parent=normal text,use=block title,bg=block title.bg!05!bg}
+\setbeamercolor{block body alerted}{parent=normal text,use=block title alerted,bg=block title alerted.bg!05!bg}
+\setbeamercolor{block body example}{parent=normal text,use=block title example,bg=block title example.bg!05!bg}
+%-------------------------------------------------------------------------------
+
+%-------------------------------------------------------------------------------
+% STRUCTURE
+\setbeamercolor{local structure}{parent=structure}
+\setbeamercolor{item}{parent=local structure}
+
+% \setbeamercolor{item projected}{parent=item,use=item,fg=item.fg,bg=item.fg!8} % default, light background
+% \setbeamercolor{item projected alerted}{parent=block title alerted, use=block title alerted, fg=white, bg=block title alerted.bg}%
+% \setbeamercolor{item alerted}{parent=block title alerted, use=block title alerted, fg=block title alerted.bg}%
+%-------------------------------------------------------------------------------
+
+%-------------------------------------------------------------------------------
+% TITLE PAGE
+\setbeamercolor{titlelike}{parent=structure}
+\setbeamercolor{title}{parent=titlelike}
+\setbeamercolor{subtitle}{parent=palette secondary}
+\setbeamercolor{author}{parent=titlelike, use=titlelike, fg=white, bg=titlelike.fg}
+\setbeamercolor{institute}{parent=titlelike}
+\setbeamercolor{date}{parent=titlelike}
+\definecolor{shadetop}{RGB}{72,62,132}
+\definecolor{shadebottom}{RGB}{124,117,167}
+%-------------------------------------------------------------------------------
+
+%-------------------------------------------------------------------------------
+% HEADLINE/FOOTLINE
+\setbeamercolor{title in head/foot}{parent=palette secondary}
+\setbeamercolor{author in head/foot}{parent=palette primary,bg=}
+\setbeamercolor{date in head/foot}{parent=palette tertiary}
+\setbeamercolor{page number in head/foot}{parent=palette primary, use=palette primary, fg=white, bg=palette primary.fg}
+
+\setbeamercolor{section in head/foot}{parent=palette primary,bg=white}
+\setbeamercolor{subsection in head/foot}{parent=palette primary,bg=white}
+\setbeamercolor{logos in head/foot}{}
+%-------------------------------------------------------------------------------
+
+%-------------------------------------------------------------------------------
+% TOC
+\setbeamercolor{section in toc}{parent=structure}
+\setbeamercolor{subsection in toc}{parent=normal text}
+\setbeamercolor{section number projected}{parent=item projected}
+\setbeamercolor{subsection number projected}{parent={item projected}}
+\setbeamercolor{section in section page}{parent=page number in head/foot}
+%-------------------------------------------------------------------------------
+
+%-------------------------------------------------------------------------------
+% FRAMETITLE
+\setbeamercolor{frametitle}{parent=palette primary}
+\setbeamercolor{framesubtitle}{parent=palette primary}
+%-------------------------------------------------------------------------------
+
+%-------------------------------------------------------------------------------
+% BIBLIOGRAPHY
+\setbeamercolor{bibliography item}{parent=item}
+
+\setbeamercolor{bibliography entry author}{use=structure,fg=structure.fg}
+\setbeamercolor{bibliography entry title}{use=normal text,fg=normal text.fg}
+\setbeamercolor{bibliography entry location}{use=structure,fg=structure.fg!75!LAMCOSlblue}
+\setbeamercolor{bibliography entry note}{use=structure,fg=structure.fg!75!LAMCOSlblue}
+
+\setbeamercolor{footnote mark}{parent=structure}
+%-------------------------------------------------------------------------------
+
+
+%-------------------------------------------------------------------------------
+% BUTTONS
+\setbeamercolor{button}{use=local structure,fg=white,bg=LAMCOSlblue}
+\setbeamercolor{button border}{use=button,fg=button.bg!10!fg}
+%-------------------------------------------------------------------------------

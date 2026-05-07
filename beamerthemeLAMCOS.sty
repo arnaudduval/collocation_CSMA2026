@@ -1,0 +1,259 @@
+%% beamertemplatecustom.sty
+%
+%
+% author: Auriane Platzer
+
+
+%-------------------------------------------------------------------------------
+% BASICS
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+\usepackage{csquotes}
+
+\usepackage{lipsum}
+\usepackage{blindtext}
+
+\usepackage{beamerappendixnote}
+\usepackage{appendixnumberbeamer} % do not count backupslides in totalframenumber
+
+% color url links only, from https://tex.stackexchange.com/a/401885
+% hyperref is automatically loaded by beamer
+%
+\hypersetup{
+  colorlinks,
+  allcolors=., % . = current color in xcolor
+  urlcolor=urlcol,
+}
+%-------------------------------------------------------------------------------
+
+
+
+%-------------------------------------------------------------------------------
+% GRAPHICS & TABLES
+
+\ifpdf % ipdf package is already loaded by beamer
+  \PassOptionsToPackage{pdftex}{graphicx} % graphicx is already loaded by beamer
+  \usepackage{mwe}
+\else
+  \usepackage{mwe}
+\fi
+
+\graphicspath{{.}{./images/}{./figures/}}
+
+\usepackage{caption}
+\captionsetup{font={color=captioncol,scriptsize},
+  labelformat=empty
+  }
+% subfigure commands
+\usepackage{subcaption}
+\captionsetup[subfigure]{
+  font={scriptsize,it,color=captioncol!65},
+  labelformat=empty,
+  }
+% \renewcommand\thesubfigure{(\alph{subfigure})}
+
+\usepackage{tikz}
+
+\usepackage{booktabs} % nicer tables
+
+\usepackage[skins]{tcolorbox} % colored boxes, used for the section page
+%-------------------------------------------------------------------------------
+
+
+%-------------------------------------------------------------------------------
+% MATHS
+% amsmath,amsfonts,amssymb,amstext are automatically loaded by beamer
+\usepackage{bm}
+\usepackage{mathtools}
+\mathtoolsset{showonlyrefs}
+% \usepackage{siunitx}
+\input{maths-commands.tex}
+
+% remove Token not allowed in pdf string warning
+\pdfstringdefDisableCommands{%
+  \def\textsuperscript#1{}%
+}
+%-------------------------------------------------------------------------------
+
+
+%-------------------------------------------------------------------------------
+% COUNTERS
+% count number of sections apart from the appendix
+% inspired from https://tex.stackexchange.com/a/357377
+\usepackage{xassoccnt}% must be loaded after `calc', loaded for instance by `mathtools' above
+% issues a warning, ignore it
+
+\NewTotalDocumentCounter{appendixsections}
+\NewTotalDocumentCounter{truesections}
+\DeclareTotalAssociatedCounters{section}{truesections,totalsections}% declare `truesections' counter to be stepped
+% simultaneously when the driver counter `section' is increased by \stepcounter
+
+\preto\appendix{
+    % stop increasing `truesections'
+    \SuspendCounters{truesections}
+    % start increasing `appendixsections' along with driver counet `section'
+    \AddAssociatedCounters{section}{appendixsections}
+}
+%-------------------------------------------------------------------------------
+
+
+%-------------------------------------------------------------------------------
+% LENGTHS
+% define usefull lengths
+\newlength\SQRL % length of square in the "plus" sign for page number
+\SQRL = 0.5cm
+\newlength\LW % line width of the lines in the hashed square
+\LW = 0.5pt
+%-------------------------------------------------------------------------------
+
+
+%-------------------------------------------------------------------------------
+% LOGOS
+% LaMCoS logo in title page
+\newlength\LH
+\LH = 8ex
+\pgfdeclareimage[height=\LH]{lamcos}{images/template/logo-lamcos-couleur-dev}
+\pgfdeclareimage[height=\LH]{lamcos-white}{images/template/logo-lamcos-blanc}
+\pgfdeclareimage[height=1.25\LH]{other-logo}{example-image-1x1} % adjust height and replace example-image-1x1 with file name
+% logos in footline
+\newlength\LHF
+\LHF = 1.1\SQRL
+\pgfdeclareimage[height=0.8\LHF]{lamcos-marque}{images/template/logo-lamcos-couleur}
+\pgfdeclareimage[height=\LHF]{cnrs}{images/template/logo-cnrs-RVB} % reference, "tallest" one
+\pgfdeclareimage[height=0.7\LHF]{insa}{images/template/logo-insa-coul-transparent}
+\pgfdeclareimage[height=0.95\LHF]{udl}{images/template/logo-udl}
+\pgfdeclareimage[height=0.95\LHF]{carnot}{images/template/logo-carnot-at-trim}
+
+% Gradient image for headline (top right corner decoration)
+\pgfdeclareimage[height=1.125ex]{headline-gdt}{images/template/headline-gradient}
+\newlength\HGH
+\settoheight{\HGH}{\pgfuseimage{headline-gdt}}
+\newlength\HGW
+\settowidth{\HGW}{\pgfuseimage{headline-gdt}}
+
+% Width of section area and section colorboxes in headline
+\newlength\sectionwidth
+\setlength{\sectionwidth}{\dimexpr(\paperwidth-\HGW)\relax}
+% compute the width of the sections based on the number of sections (appendix excluded)
+\newlength\sectionboxwd
+\AtBeginDocument{%
+  \ifnum\TotalValue{truesections}>0 % see definition of `truesections' in the COUNTERS section above
+    \setlength\sectionboxwd{\dimexpr\sectionwidth/\TotalValue{truesections}-2.5ex\relax}
+    % -2.5ex = -2 * 1.25ex = -2 * \fboxsep
+  \else
+    \setlength\sectionboxwd{\sectionwidth}
+  \fi
+}
+%-------------------------------------------------------------------------------
+
+
+%-------------------------------------------------------------------------------
+% SYMBOLS
+\usepackage{pifont}% http://ctan.org/pkg/pifont
+\newcommand{\cmark}{\ding{51}{}}%
+\newcommand{\xmark}{\ding{55}{}}%
+\newcommand{\Arrow}{\ding{212}{}}
+%-------------------------------------------------------------------------------
+
+
+%-------------------------------------------------------------------------------
+% BIBLIOGRAPHY
+\usepackage[backend=biber,
+  style=numeric, % complete citations as footnote
+  citetracker=false, % do not track whether an entry has been cited before --> full citation every time, see NOTE below
+	date=year, % date are printed as year only (no day or month)
+  url=false, % do not print url
+  ]{biblatex}
+
+% NOTE: Handle footnote citations and overlays
+% when a citation appears on multiple slides, the full reference is shown
+% on the first slide and a short reference is shown on the following slides
+% this can break overlays as the length of the citation changes from
+% one slide to the next, hence the height of the footnote area
+
+% ADDITIONNAL CUSTOMIZATION: make verbose citation style lighter
+\renewbibmacro{in:}{} % remove default "in: " (Article, in: Journal or Title, in: Book)
+\renewcommand{\finalnamedelim}{\addspace\&\space} % Author1, Author2, & Author3
+% Remove unnecessary fields from citations as they make the printed reference as footnote
+% too lenghty for slides, but keep them in the reference list given by \printbibliography
+% i.e. \AtEveryBibItem
+\AtEveryCitekey{%
+  \clearlist{language}%
+  \clearfield{issn}%
+  \clearfield{isbn}%
+  \clearlist{publisher}%
+  \clearfield{pages}%
+  \clearfield{doi}%
+  \clearfield{eprint}%
+  \clearfield{eprinttype}%
+}
+% Shorten author names, print last names only
+\DeclareNameFormat{family}{%
+  \usebibmacro{name:family}
+    {\namepartfamily}
+    {\namepartgiven}
+    {\namepartprefix}
+    {\namepartsuffix}%
+  \usebibmacro{name:andothers}
+  }
+\DeclareNameAlias{default}{family}
+\DeclareNameAlias{sortname}{default}
+\DeclareNameAlias{labelname}{default}
+% Converts title fields to sentence case, i. e., the first word is capitalized and
+% the remainder of the string is converted to lowercase.
+% \DeclareFieldFormat{titlecase}{\MakeSentenceCase*{#1}} % sentence case on journal names as well...
+\DeclareFieldFormat{sentencecase}{\MakeSentenceCase{#1}}
+\renewbibmacro*{title}{%
+  \ifthenelse{\iffieldundef{title}\AND\iffieldundef{subtitle}}
+    {}
+    {\ifthenelse{%
+      \ifentrytype{article}\OR\ifentrytype{inbook}%
+      \OR\ifentrytype{incollection}\OR\ifentrytype{inproceedings}%
+      \OR\ifentrytype{inreference}\OR\ifentrytype{thesis}
+      }
+      {\printtext[title]{%
+          \printfield[sentencecase]{title}%
+          \setunit{\subtitlepunct}%
+          \printfield[sentencecase]{subtitle}
+          }
+        }%
+      {\printtext[title]{%
+          \printfield[titlecase]{title}%
+          \setunit{\subtitlepunct}%
+          \printfield[titlecase]{subtitle}
+          }
+        }%
+      \newunit
+      }%
+  \printfield{titleaddon}
+  }
+
+%-------------------------------------------------------------------------------
+
+
+\DeclareOptionBeamer{titlepage}{\PassOptionsToPackage{titlepage=#1}{beamerinnerthemeLAMCOS}}
+\ExecuteOptionsBeamer{titlepage=center}
+\DeclareOptionBeamer{headline}{\PassOptionsToPackage{headline=#1}{beamerouterthemeLAMCOS}}
+\ExecuteOptionsBeamer{headline=sectionsubsection}
+\DeclareOptionBeamer{sectionpage}{\PassOptionsToPackage{sectionpage=#1}{beamerinnerthemeLAMCOS}}
+\ExecuteOptionsBeamer{sectionpage=true}
+\ProcessOptionsBeamer
+
+\mode<presentation>
+
+\usecolortheme{LAMCOS}
+\usefonttheme{LAMCOS}
+\useinnertheme{LAMCOS}
+\useoutertheme{LAMCOS}
+
+% Set special headline and footline for titlepage
+% from https://github.com/josephwright/beamer/issues/2#issuecomment-552503012
+\def\ps@navigation@titlepage{%
+  \setbeamertemplate{footline}[lamcos-plus-logos]
+  \setbeamertemplate{headline}[empty]
+  \@nameuse{ps@navigation}}
+	\addtobeamertemplate{title page}{\thispagestyle{navigation@titlepage}}{}
+
+\mode
+<all>

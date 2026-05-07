@@ -1,0 +1,388 @@
+% This file defines the following aspects of the template :
+% BACKGROUND
+% HEADLINE
+% FOOTLINE
+% SIDEBAR
+% FRAMETITLE
+
+\mode<presentation>
+
+%-----------------------------------------------------------------------------
+% BACKGROUND
+
+% \setbeamertemplate{background canvas}[vertical shading][top=fade,bottom=white]
+% \setbeamercolor{background canvas}{parent=normal text}
+
+%-----------------------------------------------------------------------------
+
+
+
+%-----------------------------------------------------------------------------
+% HEADLINE
+% Combination of split and miniframes themes
+% FROM : https://tex.stackexchange.com/a/162786
+
+\newcount\beamer@xoff
+\newcount\beamer@prev@section
+\newcount\beamer@prev@miniframes
+\beamer@xoff=0
+\beamer@prev@section=0
+\beamer@prev@miniframes=0
+
+\def\insertsubsectionnavigationhorizontalminiframes#1#2#3{%
+  \hbox to #1{{%
+    \usebeamerfont{subsection in head/foot}\usebeamercolor[fg]{subsection in head/foot}%
+    \beamer@currentsubsection=0%
+    \def\sectionentry##1##2##3##4##5{}%
+    \def\slideentry##1##2##3##4##5##6{%
+      \ifnum##1>\beamer@prev@section%
+        \beamer@xoff=##3\relax%
+        \beamer@prev@miniframes=0\relax%
+      \fi
+      \ifnum##6=\c@part%
+        \ifnum##1=\c@section%
+          \ifnum##2>\beamer@currentsubsection%
+            \beamer@xoff=0\relax%
+            \beamer@currentsubsection=##2%
+            \box\beamer@sectionbox\hskip1.875ex plus1fill%
+            \ifnum\beamer@prev@miniframes>0\relax%
+              \beamer@tempdim=\beamer@boxsize%
+              \multiply\beamer@tempdim by \beamer@prev@miniframes%
+              \advance\beamer@tempdim by -\beamer@boxsize%
+              \advance\beamer@tempdim by 2pt%
+              \ifnum##2>1%
+                % \advance\beamer@tempdim by 1.875ex% %do not add extra space between miniframes
+              \else % currentsection counter < 1, handle slides before \subsection definition
+                \advance\beamer@tempdim by \beamer@boxsize%
+              \fi
+            \else
+              \beamer@tempdim=0pt%
+            \fi
+            \setbox\beamer@sectionbox=
+            \hbox{%
+              % \ifbeamer@compress%
+                \def\insertsubsectionhead{\kern\beamer@tempdim}% do not print subsection name
+              % \else%
+                % \def\insertsubsectionhead{\kern\beamer@tempdim##5}%
+              % \fi%
+              \def\insertsectionheadnumber{##1}%
+              \def\insertsubsectionheadnumber{##2}%
+              \def\insertpartheadnumber{##6}%
+              \ifnum\c@subsection=##2%
+                \beamer@link(##4){{\usebeamertemplate{subsection in head/foot}}}%
+              \else%
+                \beamer@link(##4){{\usebeamertemplate{subsection in head/foot shaded}}}%
+              \fi%
+            }%
+            \ht\beamer@sectionbox=1.875ex%
+            \dp\beamer@sectionbox=0.75ex%
+          \else%
+            \beamer@prev@miniframes=##3%
+          \fi%
+          \setbox0=\hbox{\insertsectionhead\unskip}%
+          \ifdim\wd0>0pt%
+            \ifnum##3>0%
+              \beamer@xpos=##3\relax%
+              \advance\beamer@xpos by -\beamer@xoff%
+              \hbox to 0pt{%
+                \beamer@tempdim=0.5pt%
+                \raise\beamer@tempdim\hbox{%
+                  \ifnum##2>0%
+                    \beamer@tempdim=\beamer@boxsize%
+                    \multiply\beamer@tempdim by\beamer@xpos%
+                    \advance\beamer@tempdim by -\beamer@boxsize%
+                    \advance\beamer@tempdim by 2pt%
+                    \advance\beamer@tempdim by \wd\beamer@sectionbox%
+                  \else%
+                    \beamer@tempdim=\beamer@boxsize%
+                    \multiply\beamer@tempdim by \beamer@xpos%
+                    \advance\beamer@tempdim by 1.875ex%
+                  \fi%
+                  \kern\beamer@tempdim\hbox{\beamer@link(##4){%
+                      \usebeamerfont{mini frame}%
+                      \ifnum\c@section=##1%
+                        \ifnum\c@subsection=##2%
+                          \usebeamercolor[fg]{mini frame}%
+                          \ifnum\c@subsectionslide=##3%
+                            \usebeamertemplate{mini frame}%
+                          \else%
+                            \usebeamertemplate{mini frame in current subsection}%
+                          \fi%
+                        \else%
+                          \usebeamercolor{mini frame}%
+                          \usebeamertemplate{mini frame in other subsection}%
+                        \fi%
+                      \else%
+                        \usebeamercolor{mini frame}%
+                        \usebeamertemplate{mini frame in other subsection}%
+                      \fi%
+                  }}%
+                }%
+                \hskip-10cm plus 1fil%
+              }%
+            \fi%
+          \fi%
+        \else%
+          \fakeslideentry{##1}{##2}{##3}{##4}{##5}{##6}%
+        \fi
+      \fi%
+      \beamer@prev@section=##1%
+      \ignorespaces%
+    }%
+    #2%\hskip0cm%
+    \setbox\beamer@sectionbox=\hbox{}%
+    % \hskip-1.875ex plus-1fill%
+    \dohead%
+    \box\beamer@sectionbox%\hfil\hskip.3cm%
+    #3%
+  }}%
+}
+\setbeamertemplate{mini frames}[default] % box or tick
+\setbeamercolor{mini frame}{parent=subsection in head/foot}
+
+\setbeamertemplate{section in head/foot}{% inspired from from https://tex.stackexchange.com/a/58580
+  \setlength\fboxsep{1.25ex}% %same as beamercolorbox height for headline
+  \usebeamercolor{frametitle} %same color as bg color for frametitle: smooth connection
+  \colorbox{bg}{
+    \hbox to \sectionboxwd{
+      \usebeamercolor{section in head/foot}%
+      \color{fg}\hfill\insertsectionhead\hfill%
+    }
+  }
+}
+
+\setbeamertemplate{section in head/foot shaded}{%
+  \setlength\fboxsep{1.25ex}% %same as beamercolorbox height for headline
+  \usebeamercolor{section in head/foot}
+  \colorbox{bg}{
+    \hbox to \sectionboxwd{
+      \color{fg!50!bg}\hfill\insertsectionhead\hfill%
+    }
+  }
+}
+%
+% remove default skip between section boxes
+% see beamerbasenavigation.sty, \def\sectionentry for more details
+%
+\addtobeamertemplate{section in head/foot}%
+  {\hskip -1.875ex plus -1fill}%
+  {\hskip -1.875ex plus -1fill}
+\addtobeamertemplate{section in head/foot shaded}%
+  {\hskip -1.875ex plus -1fill}%
+  {\hskip -1.875ex plus -1fill}
+
+% define upper right graphics
+\newcommand{\tikzheadline}{
+  \tikz[remember picture, overlay]{
+    \draw([xshift=-0.5\HGW,yshift=-0.5\HGH]current page.north east) node[]{%
+    \pgfuseimage{headline-gdt}%
+    };
+    }}
+%
+% define headline templates
+%
+\defbeamertemplate{headline}{split miniframes theme}[3]{%
+  \leavevmode%
+  \begin{beamercolorbox}[wd=#1,ht=2.5ex,dp=1.25ex]{section in head/foot}%
+    % \insertsectionnavigationhorizontal{.5\paperwidth}{\hskip0pt plus1filll}{}% %ragged left
+    \insertsectionnavigationhorizontal{#1}{}{}%\hskip0pt plus1filll}% ragged right
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=#2,ht=2.5ex,dp=1.25ex]{subsection in head/foot}%
+    \raisebox{-1ex}{ %-1.25 depth + 0.25 margin
+      \insertsubsectionnavigationhorizontalminiframes{#3}{\hskip0pt plus1fill}{\hskip0pt plus1filll}%
+    }
+  \end{beamercolorbox}%
+  \tikzheadline
+}
+
+\defbeamertemplate{headline}{sections}{%
+  \leavevmode%
+  \begin{beamercolorbox}[wd=\sectionwidth,ht=2.5ex,dp=1.25ex]{section in head/foot}%
+    \insertsectionnavigationhorizontal{\sectionwidth}{}{}%{\hskip0pt plus1fill}{\hskip0pt plus1fill}% centered
+  \end{beamercolorbox}%
+  \tikzheadline
+  }
+
+\defbeamertemplate{headline}{empty}{%
+  \leavevmode%
+  \tikzheadline
+  }
+
+%
+% define headline options
+%
+\newlength\headlineskip
+\setlength{\headlineskip}{0pt}
+
+\def\beamer@theme@headline@sectionsubsection{%
+  \setbeamertemplate{headline}[split miniframes theme]{\sectionwidth}{\HGW}{0.95\HGW}
+  % third argument is a dirty hack to prevent Overfull \hbox warning
+}
+\def\beamer@theme@headline@section{%
+  \setbeamertemplate{headline}[sections]
+}
+\def\beamer@theme@headline@empty{%
+  % \setbeamercolor{frametitle}{bg=white}
+  \setlength{\headlineskip}{2.5ex}
+  \setbeamertemplate{headline}[empty]
+}
+
+\DeclareOptionBeamer{headline}{\csname beamer@theme@headline@#1\endcsname}
+
+%-----------------------------------------------------------------------------
+
+
+
+%-----------------------------------------------------------------------------
+% FOOTLINE
+
+
+\newcommand{\tikzplus}{
+  \tikz[baseline=0.25\SQRL,remember picture, overlay]{%
+    \usebeamercolor{page number in head/foot}
+    % light vertical lines above blue square (21)
+    % \foreach \x in {0, 0.05\SQRL, ..., \SQRL} % it does not work, do not know why ...
+    \foreach \x in {0,0.05\SQRL,0.1\SQRL,0.15\SQRL,0.20\SQRL,0.25\SQRL,0.3\SQRL,0.35\SQRL,%
+    0.4\SQRL,0.45\SQRL,0.5\SQRL,0.55\SQRL,0.6\SQRL,0.65\SQRL,0.7\SQRL,0.75\SQRL,0.8\SQRL,%
+    0.85\SQRL,0.9\SQRL,0.95\SQRL,\SQRL}
+    \draw[solid,color=bg!20,line width=0.5\LW] (\x,\SQRL) -- ++(0,\SQRL);
+
+    % colored vertical lines left of blue square
+    \foreach \x/\y in {\SQRL/LAMCOSdblue, 0.75\SQRL/LAMCOSlblue, 0.5\SQRL/LAMCOSyellow, 0.25\SQRL/LAMCOSred}
+    \draw[solid,color=\y,line width=\LW] (-\x,0) -- ++(0,\SQRL);
+
+    % blue square with page number
+    \fill[fill=bg,line width=\LW,draw=bg] (0,0) -- ++(0,\SQRL) -- ++(\SQRL,0) -- ++(0,-\SQRL) ;
+    \draw (0.5\SQRL,0.5\SQRL) node[text=fg,anchor=center] (p) {%
+      \usebeamerfont{page number in head/foot}\strut\insertframenumber\strut%
+      };
+    }%
+  }
+
+\newlength\LOGOSW
+\LOGOSW = .53\paperwidth
+\advance \LOGOSW by -0.5\beamer@rightmargin
+\advance \LOGOSW by -2.25\SQRL
+\defbeamertemplate{footline}{lamcos-plus-logos}
+  {%
+    \leavevmode%
+    \hbox to \paperwidth{%
+    \begin{beamercolorbox}[wd=0.47\paperwidth,ht=\SQRL,dp=0.5\SQRL,left,leftskip=2\beamer@leftmargin]{date in head/foot}%
+      \usebeamerfont{date in head/foot} \insertdate
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=\LOGOSW,ht=\SQRL,dp=0.5\SQRL,left]{logos in head/foot}%
+        \tikz[baseline=-0.25\SQRL]{
+          \draw(0,0) node[anchor=center] (c) {\pgfuseimage{cnrs}};
+          \draw(c.east) node[anchor=west] (i) {\pgfuseimage{insa}};
+          \draw(i.east) node[anchor=west] (u) {\pgfuseimage{udl}};
+          \draw(u.east) node[anchor=west] (ca) {\pgfuseimage{carnot}};
+          }
+    \end{beamercolorbox}%
+    \hskip0pt plus 1fill
+    \tikzplus%
+    \hspace{\dimexpr0.5\beamer@rightmargin+\SQRL}
+    }
+}
+
+\newlength\LOGOW
+\settowidth{\LOGOW}{\pgfuseimage{lamcos-marque}}
+\advance \LOGOW by \beamer@leftmargin
+
+\newlength\DATEW
+\DATEW = 0.2\paperwidth
+\advance \DATEW by -.5\LOGOW
+
+\newlength\AUTHORW
+\AUTHORW = 0.3\paperwidth
+\advance \AUTHORW by -.5\LOGOW
+
+\newlength\TTLW
+\TTLW = .5\paperwidth
+\advance \TTLW by -0.5\beamer@rightmargin
+\advance \TTLW by -2.25\SQRL
+
+\defbeamertemplate*{footline}{lamcos-plus}
+  {%
+    \leavevmode%
+    \hbox to \paperwidth{%
+    \begin{beamercolorbox}[wd=\LOGOW,ht=\SQRL,dp=0.5\SQRL,left,leftskip=0.5\beamer@leftmargin]{logos in head/foot}%
+      \raisebox{-0.25\SQRL}{%
+        \pgfuseimage{lamcos-marque}%
+        }%
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=\DATEW,ht=\SQRL,dp=0.5\SQRL,center]{date in head/foot}%
+      \centering\usebeamerfont{date in head/foot} \insertshortdate
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=\TTLW,ht=\SQRL,dp=0.5\SQRL,center]{title in head/foot}%
+      \usebeamerfont{title in head/foot}%
+      \insertshorttitle%
+      %  \hfill%
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=\AUTHORW,ht=\SQRL,dp=0.5\SQRL,center]{author in head/foot}%
+        \ifx\insertinstitute\empty%
+          \centering\usebeamerfont{author in head/foot} \insertshortauthor%
+        \else%
+          \centering\usebeamerfont{author in head/foot} \insertshortauthor{} (\insertshortinstitute)%
+        \fi%
+    \end{beamercolorbox}%
+    \hskip0pt plus 1fill
+    \tikzplus%
+    \hspace{\dimexpr0.5\beamer@rightmargin+\SQRL}
+    }%
+}
+
+
+%-------------------------------------------------------------------------------
+
+
+%-----------------------------------------------------------------------------
+% SIDEBAR
+\setbeamertemplate{sidebar left}{} % remove sidebar left
+\setbeamertemplate{navigation symbols}{} % removes navigations symbols (default outer theme)
+\setbeamertemplate{sidebar right}{} % removes the logo (logo + navigation symbols in default theme)
+
+%-----------------------------------------------------------------------------
+
+%-----------------------------------------------------------------------------
+% FRAMETITLE
+% inspired from default theme: https://github.com/josephwright/beamer/blob/main/base/themes/outer/beamerouterthemedefault.sty
+
+\newlength\FRTTLW %FRameTiTLe Width
+\FRTTLW = \paperwidth
+\advance\FRTTLW by -\HGW
+\defbeamertemplate*{frametitle}{lamcos}
+{%
+  \ifbeamercolorempty[bg]{frametitle}{}{\nointerlineskip}%
+  \vspace{\headlineskip}%
+  \hspace{-\beamer@leftmargin}% from https://tex.stackexchange.com/a/558544
+  \begin{beamercolorbox}[sep=0.3cm,left,wd=\FRTTLW]{frametitle}
+    \usebeamerfont{frametitle}%
+    \vbox{}\vskip-1ex%
+    \if@tempswa\else\csname beamer@fteleft\endcsname\fi%
+    \strut\insertframetitle\strut\par%
+    {%
+      \ifx\insertframesubtitle\@empty%
+      \else%
+      {\usebeamerfont{framesubtitle}\usebeamercolor[fg]{framesubtitle}\strut\insertframesubtitle\strut\par}%
+      \fi
+    }%
+    \vskip-1ex%
+    \if@tempswa\else\vskip-.3cm\fi% set inside beamercolorbox... evil here...
+  \end{beamercolorbox}%
+}
+
+%\setbeamertemplate{frametitle}[default][left] % use template from default theme, subtitle included (same background as title), left aligned
+\setbeamertemplate{frametitle}[lamcos]
+
+\setbeamertemplate{frametitle continuation}[from second]
+% \defbeamertemplate{frametitle continuation}{from second brackets}[1][\insertcontinuationtext]{%
+%   \expandafter
+%   \ifnum\insertcontinuationcount>1\relax
+%   (#1)
+%   \fi
+% }
+%-----------------------------------------------------------------------------
+\ProcessOptionsBeamer
+
+\mode
+<all>
