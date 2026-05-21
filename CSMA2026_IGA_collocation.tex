@@ -88,7 +88,7 @@
 \begin{frame}
   \frametitle{Analyse isogéométrique (IGA)}
 
-  L'analyse isogéométrique se base sur les primitives géométriques issues de la CAO (B-Splines, NURBS, \dots).
+  L'analyse isogéométrique se base sur les primitives géométriques issues de la CAO (B-Splines, NURBS, \dots). \\
   Elle inclut la méthode des éléments finis comme un cas particulier.
   \begin{columns}
     \begin{column}{0.22 \linewidth}
@@ -109,7 +109,6 @@
 
 \begin{frame}
   \frametitle{Modélisation B-Spline}
-
   \begin{columns}
     \begin{column}{0.65 \linewidth}
       \begin{itemize}
@@ -177,10 +176,10 @@
   \end{center}
 \end{frame}
 
-\section{Décomposition de domaine}
+\section*{DD}
 
 \begin{frame}
-  \frametitle{Lien CAO / IGA dans la réalité}
+  \frametitle{Lien CAO/calcul dans la réalité}
     \begin{itemize}
       \item Approche B-rep pour les volumes
     \end{itemize}
@@ -224,9 +223,66 @@
 \end{frame}
 
 \begin{frame}
+  \frametitle{Multipatch non conforme}
+  \begin{columns}
+  \begin{column}{0.6\linewidth}
+    \begin{center}
+      \includegraphics[width=\linewidth]{figures/blade_with_platform.pdf}
+    \end{center}
+  \end{column}
+  \begin{column}{0.4\linewidth}
+    \begin{itemize}
+    \item Couplage sans recouvrement
+    \item Patchs non conformes
+    \item Méthode mortar, intégration sur l'interface (ici, une surface)
+    \begin{equation}
+      \int_{\Gamma_0} \vec{\lambda} \cdot \left( \vec{u_1} - \vec{u_2} \right) \textrm{d}\Gamma
+    \end{equation}
+    \item Interface facile à déterminer pour les cas bien choisis
+  \end{itemize}
+  \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Multipatch non conforme}
+    \begin{center}
+      \includegraphics[width=0.6\linewidth]{figures/proj_interfaces_potato.pdf}
+    \end{center}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Multipatch non conforme}
+    \begin{itemize}
+      \item Couplage de patchs non conformes sans recouvrement
+      \item Attention aux problèmes d'étanchéité !
+    \end{itemize}
+    \begin{columns}
+    \begin{column}{0.5 \linewidth}
+      \begin{center}
+        \includegraphics[width=0.65\linewidth]{figures/Fig22b.pdf}
+      \end{center}
+    \end{column}
+    \begin{column}{0.5 \linewidth}
+      \only<1>{
+      \begin{center}
+        \includegraphics[width=\linewidth]{figures/embedded_fillet.pdf}
+      \end{center}
+      }
+      \only<2>{
+      \begin{center}
+        \includegraphics[width=0.7\linewidth]{figures/Fig18a.pdf}
+      \end{center}
+      }
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}
   \frametitle{Géométrie adaptée à l'analyse isogéométrique}
   \begin{itemize}
-    \item Couplage de patchs avec recouvrement $\approx$ opération booléenne d'addition en CAO
+    \item Couplage de patchs avec recouvrement $\approx$ opération booléenne d'union en CAO
     \item Possibilité d'utiliser des patchs \textit{templates} (optimisation)
   \end{itemize}
   \begin{columns}
@@ -243,7 +299,7 @@
   \end{columns}
 \end{frame}
 
-\section{Couplage avec recouvrement}
+\section*{Overlapping}
 \begin{frame}
   \frametitle{Couplage avec recouvrement}
   \begin{itemize}
@@ -328,7 +384,7 @@
     \item Pondération de la raideur dans la zone recouvrante
     \begin{itemize}
       \item $\times \frac{1}{2}$ aux points d'intégration situés dans $\Omega_1 \bigcap \Omega_2$
-      \item Avec une fonction plus \textit{smooth} (mais on veux éviter une paramétristaion de l'intersection)
+      \item Avec une fonction plus \textit{smooth} (mais on veux éviter une paramétrisation de l'intersection)
     \end{itemize}
     \item \faWarning{} Beaucoup d'inversions de paramétrisation
     \item Résolution avec un seul système linéaire monolithique ou avec un solveur itératif FETI/IETI
@@ -349,7 +405,7 @@
   \end{itemize}
 \end{frame}
 
-\section{Résultats}
+\section*{Résultats}
 
 \begin{frame}
   \frametitle{Stabilité numérique}
@@ -475,20 +531,95 @@
   \end{center}
 \end{frame}
 
-\section{Conclusion}
+\begin{frame}
+  \frametitle{Convergence en maillage - recouvrement total}
+  \begin{columns}
+    \begin{column}{0.5\linewidth}
+     \begin{itemize}
+       \item Plaque trouée infinie en traction
+       \item $\exists$ solution analytique qui n'est pas dans l'espace d'approximation
+       \item 2 patchs, recouvrement total
+       \item Degré patchs $\lambda$ = degré patchs $u$ - 1
+       \item Raideur $\times 1/2$ dans les 2 patchs
+       \item \faArrowUp{} nb de points de collocation en même temps que raffinement
+     \end{itemize}
+    \end{column}
+    \begin{column}{0.5\linewidth}
+      \begin{center}
+        \includegraphics[width=\linewidth]{figures/plaque_trouee_rec_tot.pdf}
+      \end{center}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Convergence en maillage - recouvrement total}
+  \begin{columns}
+    \begin{column}{0.5\linewidth}
+      \begin{center}
+        \only<1>{\includegraphics[width=\linewidth]{figures/convergence_monopatch.pdf}}
+        \only<2>{\includegraphics[width=\linewidth]{figures/convergence_monopatch_fit.pdf}}
+      \end{center}
+    \end{column}
+    \begin{column}{0.5\linewidth}
+      \begin{center}
+        \only<1>{\includegraphics[width=\linewidth]{figures/convergence_recouvrement_total_deg2.pdf}}
+        \only<2>{\includegraphics[width=\linewidth]{figures/convergence_recouvrement_total.pdf}}
+      \end{center}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Recouvrement partiel}
+  \begin{columns}
+    \begin{column}{0.5\linewidth}
+     \begin{itemize}
+       \item Recouvrement radial partiel
+       \item Raideur $\times 1/2$ dans la zone de recouvrement
+     \end{itemize}
+    \end{column}
+    \begin{column}{0.5\linewidth}
+      \begin{center}
+        \includegraphics[width=0.9\linewidth]{figures/plaque_trouee_recouvrement_partiel.png}
+      \end{center}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Recouvrement partiel}
+  \begin{columns}
+    \begin{column}{0.5\linewidth}
+      \begin{center}
+        \includegraphics[width=0.9\linewidth]{figures/plaque_trouee_partiel_disp.png}
+      \end{center}
+    \end{column}
+    \begin{column}{0.5\linewidth}
+      \begin{center}
+        \includegraphics[width=0.9\linewidth]{figures/plaque_trouee_partiel_err.png}
+      \end{center}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\section*{Conclusion}
 
 \begin{frame}
   \frametitle{Conclusion}
-  \small
+  \footnotesize
+  \only<1>{
   \begin{block}{Bilan}
     \begin{columns}
       \begin{column}{0.8\linewidth}
         \begin{itemize}
-          \item Méthode de couplage sans définition géométrique de la zone d'intersection
-          \item Meilleure continuité par rapport à une méthode classique de collocation
+          \item Méthode de couplage avec recouvrement sans paramétrisation géométrique de la zone d'intersection
+          \item Prise en compte des gradients dans la condition de raccord
           \item Bonnes pratiques de paramétrisation élaborées expérimentalement
-          \item Implémentation dans le code de calcul Yeti (\texttt{pip install yeti-ga})
-        \end{itemize}
+          \item Implémentation dans le code de calcul Yeti
+          \item Convergence pas au niveau espèré
+        \end{itemize}œ
       \end{column}
       \begin{column}{0.2\linewidth}
         \begin{center}
@@ -497,12 +628,15 @@
       \end{column}
     \end{columns}
   \end{block}
-  \begin{block}{Perspective}
+  }
+  \only<2>{
+  \begin{block}{Perspectives}
     \begin{columns}
       \begin{column}{0.8\linewidth}
         \begin{itemize}
-          \item Analyse de convergence (maillage, nombre de points de collocation, \dots)
+          \item Poursuivre l'analyse de convergence (maillage, nombre de points de collocation, \dots)
           \item Détermination numérique de la condition inf-sup
+          \item Quid de la convergence de FETI ? En fonctin de $d$ ?
           \item Extension au 3D avec N patchs
         \end{itemize}
       \end{column}
@@ -513,6 +647,7 @@
       \end{column}
     \end{columns}
   \end{block}
+  }
 \end{frame}
 
 \end{document}
